@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -42,6 +43,7 @@ public class Empresa implements Serializable{
     @Column(name = "data_fundacao")
     private Date dataFundacao;
     
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "ramo_atividade_id", nullable = false)
     private RamoAtividade ramoAtividade;

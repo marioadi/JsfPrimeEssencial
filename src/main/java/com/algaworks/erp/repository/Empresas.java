@@ -34,7 +34,9 @@ public class Empresas implements Serializable{
     }
     
     public List<Empresa> todas(){
-        return manager.createQuery("FROM Empresa", Empresa.class).getResultList();
+        String sql = "FROM Empresa";
+        TypedQuery<Empresa> query = manager.createQuery(sql, Empresa.class);
+        return query.getResultList();
     }
     
     public Empresa guardar(Empresa empresa){
