@@ -42,6 +42,7 @@ public class GestaoEmpresasBean implements Serializable {
     private List<Empresa> listaEmpresas;
 
     private String termoPesquisa;
+    private Empresa empresaSelecionadaBean;
 
     public GestaoEmpresasBean() {
         listaEmpresas = new ArrayList<>();
@@ -54,6 +55,10 @@ public class GestaoEmpresasBean implements Serializable {
 
     public void prepararNovaEmpresa() {
         empresa = new Empresa();
+    }
+
+    public void prepararEdicao() {
+        atividadeConverter = new RamoAtividadeConverter(Arrays.asList(empresa.getRamoAtividade()));
     }
 
     public void salvar() {
@@ -74,6 +79,20 @@ public class GestaoEmpresasBean implements Serializable {
             }
         } catch (ErroBancoDadosException ex) {
             LOG.log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void excluir() {
+        try {
+            if (empresaSelecionadaBean != null) {
+                empresaDAO.excluir(empresaSelecionadaBean.getId());
+                facesMessages.info("Empresa excluida com sucesso!");
+                todasEmpresas();
+                //Só vai ser chamado quando a empresa for salva
+                RequestContext.getCurrentInstance().update(Arrays.asList("frm:empresasDataTable", "frm:messages"));
+            }
+        } catch (ErroBancoDadosException ex) {
+            Logger.getLogger(GestaoEmpresasBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -128,6 +147,22 @@ public class GestaoEmpresasBean implements Serializable {
 
     public Empresa getEmpresa() {
         return empresa;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
+
+    public boolean isEmpresaSelecionada() {
+        return empresa != null && empresa.getId() != null;
+    }
+
+    public Empresa getEmpresaSelecionadaBean() {
+        return empresaSelecionadaBean;
+    }
+
+    public void setEmpresaSelecionadaBean(Empresa empresaSelecionada) {
+        this.empresaSelecionadaBean = empresaSelecionada;
     }
 
 }

@@ -48,11 +48,24 @@ public abstract class DAO<T> implements Serializable {
         }
     }
 
+    public void excluir(Object o) throws ErroBancoDadosException {
+        try {
+            trx = manager.getTransaction();
+            trx.begin();
+            T entityToBeRemoved = manager.getReference(classe, o);
+            manager.remove(entityToBeRemoved);
+            trx.commit();
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, null, e);
+            throw new ErroBancoDadosException(e.getMessage());
+        }
+    }
+
     public List<T> pesquisar(String nome) throws ErroBancoDadosException {
         try {
             String sql = "from Empresa where razaoSocial like :razaoSocial";
             Query query = manager.createQuery(sql, Empresa.class);
-            query.setParameter("razaoSocial", "%"+nome+"%");
+            query.setParameter("razaoSocial", "%" + nome + "%");
             return query.getResultList();
         } catch (Exception e) {
             LOG.log(Level.SEVERE, null, e);
